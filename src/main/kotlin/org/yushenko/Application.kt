@@ -3,6 +3,7 @@ package org.yushenko
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.yushenko.plugins.DatabaseFactory.initializationDatabase
 import org.yushenko.plugins.configureRouting
 
 fun main() {
@@ -12,5 +13,6 @@ fun main() {
 
 @Suppress("unused")
 fun Application.module() {
+    initializationDatabase()
     configureRouting()
 }
