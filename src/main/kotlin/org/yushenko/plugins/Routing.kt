@@ -1,13 +1,13 @@
 package org.yushenko.plugins
 
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.yushenko.domain.usecase.CardUseCase
+import org.yushenko.domain.usecase.UserUseCase
+import org.yushenko.routes.userRoute
 
-fun Application.configureRouting() {
+fun Application.configureRouting(userUseCase: UserUseCase, cardUseCase: CardUseCase) {
     routing {
-        get("/") {
-            call.respondText("Hello World")
-        }
+        userRoute(userUseCase = userUseCase)
     }
 }
