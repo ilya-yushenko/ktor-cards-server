@@ -1,11 +1,10 @@
-package org.yushenko.data.model
+package org.yushenko.data.model.requests
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CardModel(
-    val id: Int,
-    val owner: Int,
+data class CardRequest(
+    val id: Int? = null,
     val cardTitle: String,
     val cardDescription: String,
     val cardDate: String,

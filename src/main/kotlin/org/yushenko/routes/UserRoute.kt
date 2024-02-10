@@ -2,6 +2,7 @@ package org.yushenko.routes
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -14,7 +15,7 @@ import org.yushenko.data.model.response.BaseResponse
 import org.yushenko.domain.usecase.UserUseCase
 import org.yushenko.utils.Constants
 
-fun Route.userRoute(userUseCase: UserUseCase) {
+fun Route.UserRoute(userUseCase: UserUseCase) {
 
     val hashFunction = { p: String -> hash(password = p) }
 
@@ -61,6 +62,22 @@ fun Route.userRoute(userUseCase: UserUseCase) {
             }
         } catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, BaseResponse(false, e.message ?: Constants.Error.GENERAL))
+        }
+    }
+
+    authenticate("jwt") {
+
+        get("api/v1/get-user-info") {
+            try {
+                val user = call.principal<UserModel>()
+                if (user != null) {
+                    call.respond(HttpStatusCode.OK, user)
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, BaseResponse(false, Constants.Error.USER_NOT_FOUND))
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.Conflict, BaseResponse(false, e.message ?: Constants.Error.GENERAL))
+            }
         }
     }
 }
