@@ -13,13 +13,19 @@ plugins {
 }
 
 group = "org.yushenko"
-version = "0.0.1"
+version = "0.0.1-SNAPSHOT"
 
 application {
     mainClass.set("org.yushenko.ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("${project.name}-$version.jar")
+    }
 }
 
 repositories {

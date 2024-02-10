@@ -3,15 +3,19 @@ package org.yushenko.authentication
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import com.typesafe.config.ConfigFactory
+import io.ktor.server.config.*
 import org.yushenko.data.model.UserModel
+import org.yushenko.ext.getConfigProperty
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class JwtService {
 
-    private val issuer = "cards-server"
-    private val jwtSecret = System.getenv("JWT_SECRET")
-    private val algorithm = Algorithm.HMAC512(jwtSecret)
+    private val appConfig = HoconApplicationConfig(ConfigFactory.load())
+    private val issuer = appConfig.getConfigProperty("jwt.issuer")
+    private val secret = appConfig.getConfigProperty("jwt.secret")
+    private val algorithm = Algorithm.HMAC512(secret)
 
     private val verifier: JWTVerifier = JWT
         .require(algorithm)

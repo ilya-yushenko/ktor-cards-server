@@ -12,13 +12,15 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.yushenko.data.model.tables.CardTable
 import org.yushenko.data.model.tables.UserTable
+import org.yushenko.ext.getConfigProperty
 
 object DatabaseFactory {
 
     private val appConfig = HoconApplicationConfig(ConfigFactory.load())
-    private val dbUrl = System.getenv("DB_POSTGRES_URL")
-    private val dbUser = System.getenv("DB_POSTGRES_USER")
-    private val dbPassword = System.getenv("DB_PASSWORD")
+    private val dbDriver = appConfig.getConfigProperty("db.driver")
+    private val dbUrl = appConfig.getConfigProperty("db.url")
+    private val dbUser = appConfig.getConfigProperty("db.username")
+    private val dbPassword = appConfig.getConfigProperty("db.password")
 
     fun Application.initializationDatabase() {
         Database.connect(getHikariDataSource())
@@ -35,7 +37,7 @@ object DatabaseFactory {
         println("DB USER: $dbUser")
 
         val config = HikariConfig()
-        config.driverClassName = "org.postgresql.Driver"
+        config.driverClassName = dbDriver
         config.jdbcUrl = dbUrl
         config.username = dbUser
         config.password = dbPassword
